@@ -6,14 +6,14 @@ import { mentorRouter } from "./routes/mentors.js"
 import cors from "cors";
 
 const app = express()
-
+app.use(cors()); 
 dotenv.config();
 const PORT = process.env.PORT;               
 const MONGO_URL = process.env.MONGO_URL;
 
 app.use(express.json())
 
-app.use(cors());              //allowing any path to access the routes of the application
+             //allowing any path to access the routes of the application
 
 
 async function createConnection(){                           //create a mongodb connection
