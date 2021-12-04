@@ -18,6 +18,7 @@ router.route("/").post(async (req,res) => {                                     
     students ? res.send(students) : res.send("Not Found");
 })
 
+
 router.route("/:id").put(async (req,res) => {                            //find a student by Id and add mentor to the student
     const { id } = req.params;
     const data = req.body;
@@ -28,6 +29,11 @@ router.route("/:id").put(async (req,res) => {                            //find 
     const result = await client.db("b28wd").collection("mentors").findOneAndUpdate({name: mentor}, {$push: { students:  studentUpdated }});
     res.send(result);
    
+})
+.get(async (req,res) => {  
+    const { id } = req.params;                                                  //get student by id
+    const student = await client.db("b28wd").collection("students").findOne({id: id})
+    res.send(student);
 })
 
 router.route("/changementor/:id").put(async (req,res) => {          //find a student by Id and change mentor for the student
