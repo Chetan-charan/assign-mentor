@@ -15,24 +15,7 @@ router.route("/").get(async (req,res) => {                                      
     res.send(result);
 })
 
-router.route("/:id").put(async (req,res) => {                          //find mentor by Id and assign mentor to a student  
-    const { id } = req.params;
-    const student = req.body;
-    const studentEntered = await client.db("b28wd").collection("students").findOne({name : student.name});
-    if(!studentEntered.mentor){
-        
-        const mentor = await client.db("b28wd").collection("mentors").findOne({id : id});
-    const result2 = await client.db("b28wd").collection("students").findOneAndUpdate({name : student.name}, {$set: { mentor: mentor.name }});
-    const updatedStudent = await client.db("b28wd").collection("students").findOne({name : student.name});
-    const result = await client.db("b28wd").collection("mentors").findOneAndUpdate({id : id}, {$push: { students: updatedStudent  }});
-    res.send(result2);
-    }
-    else{
-        res.send( {Message :"Mentor already assigned to student" })
-    }
-    
-})
-.get(async (req,res) => {                         //find mentor by Id and display all students
+router.route("/:id").get(async (req,res) => {                         //find mentor by Id and display all students
     const { id } = req.params;
   
     const studentsOfMentor = await client.db("b28wd").collection("mentors").findOne({ id: id },{students: 1});
@@ -45,7 +28,7 @@ router.route("/add-multiple-students/:id").put(async (req,res) => {             
     const students = req.body;                                                               
     const studentsTobeAdded = students.students;                                            //array of student names
     for(let i=0;i<studentsTobeAdded.length;i++){
-        const studentName = studentsTobeAdded[i].name;
+        const studentName = studentsTobeAdded[i];
         const studentEntered = await client.db("b28wd").collection("students").findOne({name : studentName});  
         if(!studentEntered.mentor){                                                                                     //check if mentor not assigned to student
         
@@ -62,7 +45,4 @@ router.route("/add-multiple-students/:id").put(async (req,res) => {             
     
 })
 
-
-
-
-export const mentorRouter = router;              //export mentor router
+export const mentorRouter = router;    
